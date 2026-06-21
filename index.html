@@ -459,6 +459,12 @@ async function waitForImages() {
     }));
 }
 
+async function waitForFonts() {
+    if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
+    }
+}
+
 document.getElementById("downloadBracket").addEventListener("click", async () => {
 
     const button = document.getElementById("downloadBracket");
@@ -469,14 +475,20 @@ document.getElementById("downloadBracket").addEventListener("click", async () =>
     try {
 
         await waitForImages();
+        await waitForFonts();
+
+        // pequeño respiro para que el navegador termine de pintar
+        // estilos (glow, fuentes) antes de capturar
+        await new Promise(resolve => setTimeout(resolve, 150));
 
         const bracket = document.querySelector(".wrapper");
 
         const canvas = await html2canvas(bracket, {
-            backgroundColor: "#071c22",
+            backgroundColor: "#000000",
             scale: 4,
             useCORS: true,
             allowTaint: true,
+            foreignObjectRendering: true,
             width: bracket.scrollWidth,
             height: bracket.scrollHeight,
             windowWidth: bracket.scrollWidth,
