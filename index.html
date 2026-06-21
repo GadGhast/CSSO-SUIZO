@@ -7,6 +7,30 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
+#downloadBracket{
+position:fixed;
+bottom:20px;
+right:20px;
+z-index:9999;
+padding:12px 20px;
+background:#2e8b57;
+border:2px solid #4cff9a;
+color:white;
+font-size:14px;
+font-family:'Orbitron',sans-serif;
+cursor:pointer;
+border-radius:8px;
+transition:.2s;
+}
+
+#downloadBracket:hover{
+transform:scale(1.05);
+}
+
+#downloadBracket:disabled{
+opacity:.7;
+cursor:wait;
+}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Orbitron',sans-serif}
 body{background:#071c22;color:#fff;overflow-x:auto}
 .wrapper{display:flex;gap:120px;padding: 50px 50px 50px 50px;min-width: 2040px;align-items:flex-start}
@@ -310,5 +334,63 @@ text-align:center
 
 </div> <!-- FIN WRAPPER -->
 
+<button id="downloadBracket">📥 Descargar Bracket</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+async function waitForImages() {
+    const images = [...document.querySelectorAll("img")];
+
+    await Promise.all(images.map(img => {
+        if (img.complete) return Promise.resolve();
+
+        return new Promise(resolve => {
+            img.onload = resolve;
+            img.onerror = resolve;
+        });
+    }));
+}
+
+document.getElementById("downloadBracket").addEventListener("click", async () => {
+
+    const button = document.getElementById("downloadBracket");
+
+    button.disabled = true;
+    button.textContent = "Generando PNG...";
+
+    try {
+
+        await waitForImages();
+
+        const bracket = document.querySelector(".wrapper");
+
+        const canvas = await html2canvas(bracket, {
+            backgroundColor: "#071c22",
+            scale: 4,
+            useCORS: true,
+            allowTaint: true,
+            width: bracket.scrollWidth,
+            height: bracket.scrollHeight,
+            windowWidth: bracket.scrollWidth,
+            windowHeight: bracket.scrollHeight
+        });
+
+        const link = document.createElement("a");
+        link.download = "bracket.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+
+    } catch (err) {
+        console.error(err);
+        alert("Error al generar la imagen");
+    }
+
+    button.disabled = false;
+    button.textContent = "📥 Descargar Bracket";
+});
+</script>
+
 </body>
 </html>
+
