@@ -7,6 +7,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
+/* ================= RESET ================= */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Orbitron',sans-serif;
+}
+
+body{
+background:#000;
+color:#fff;
+overflow-x:auto;
+}
+
+/* ================= DOWNLOAD BUTTON ================= */
 #downloadBracket{
 position:fixed;
 bottom:20px;
@@ -17,7 +32,6 @@ background:#2e8b57;
 border:2px solid #4cff9a;
 color:white;
 font-size:14px;
-font-family:'Orbitron',sans-serif;
 cursor:pointer;
 border-radius:8px;
 transition:.2s;
@@ -31,22 +45,71 @@ transform:scale(1.05);
 opacity:.7;
 cursor:wait;
 }
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Orbitron',sans-serif}
-body{background:#071c22;color:#fff;overflow-x:auto}
-.wrapper{display:flex;gap:120px;padding: 50px 50px 50px 50px;min-width: 2040px;align-items:flex-start}
-.swiss{display:flex;gap:20px}
-.col{width:190px}
-.col-title{
-font-size:13px;
-margin-bottom:-2px;
-letter-spacing:2px;
-color:#ccc;
-border:2px solid #2e8b57;
-padding:4px;
-text-align:center
+
+/* ================= LAYOUT ================= */
+.wrapper{
+display:flex;
+gap:120px;
+padding:50px;
+min-width:2040px;
+align-items:flex-start;
 }
 
-/* MATCH HORIZONTAL */
+.swiss{
+display:flex;
+gap:20px;
+}
+
+.col{
+width:190px;
+}
+
+/* ================= TITLES ================= */
+.col-title,
+.col-titleg,
+.col-titlegr,
+.col-titley,
+.col-titler,
+.col-playoffs{
+font-size:13px;
+margin-bottom:-8px;
+letter-spacing:2px;
+padding:0 0 8px 0;
+border-radius:9px 9px 0 0;
+text-align:center;
+}
+
+.col-titleg{
+color:#2e8b57;
+border:2px solid #2e8b57;
+border-bottom:none;
+}
+
+.col-titlegr{
+color:#8a8f94;
+border:2px solid #8a8f94;
+border-bottom:none;
+}
+
+.col-titley{
+color:#c99a2e;
+border:2px solid #c99a2e;
+border-bottom:none;
+}
+
+.col-titler{
+color:#d83b3b;
+border:2px solid #d83b3b;
+border-bottom:none;
+}
+
+.col-playoffs{
+color:#2e8b57;
+border:2px solid #2e8b57;
+border-bottom:none;
+}
+
+/* ================= MATCH BASE ================= */
 .match{
 display:flex;
 align-items:center;
@@ -56,87 +119,10 @@ border-radius:9px;
 padding:10px 12px;
 min-height:54px;
 position:relative;
+transition:.25s ease;
 }
 
-.col-titleg{
-font-size:13px;
-margin-bottom:-8px;
-letter-spacing:2px;
-color:#2e8b57;
-border-top: 2px solid #2e8b57;
-border-left: 2px solid #2e8b57;
-border-right: 2px solid #2e8b57;
-border-bottom: none;
-padding: 0px 0px 8px 0px;
-border-radius:9px 9px 0 0;
-text-align: center;
-}
-
-.col-titlegr{
-font-size:13px;
-margin-bottom:-8px;
-letter-spacing:2px;
-color:#8a8f94;
-border-top: 2px solid #8a8f94;
-border-left: 2px solid #8a8f94;
-border-right: 2px solid #8a8f94;
-border-bottom: none;
-padding: 0px 0px 8px 0px;
-border-radius:9px 9px 0 0;
-text-align: center;
-}
-
-.col-titley{
-font-size:13px;
-margin-bottom:-8px;
-letter-spacing:2px;
-color:#c99a2e;
-border-top: 2px solid #c99a2e;
-border-left: 2px solid #c99a2e;
-border-right: 2px solid #c99a2e;
-border-bottom: none;
-padding: 0px 0px 8px 0px;
-border-radius:9px 9px 0 0;
-text-align: center;
-}
-
-.col-titler{
-font-size:13px;
-margin-bottom:-8px;
-letter-spacing:2px;
-color:#d83b3b;
-border-top: 2px solid #d83b3b;
-border-left: 2px solid #d83b3b;
-border-right: 2px solid #d83b3b;
-border-bottom: none;
-padding: 0px 0px 8px 0px;
-border-radius:9px 9px 0 0;
-text-align: center;
-}
-
-.col-playoffs{
-font-size:13px;
-margin-bottom:-8px;
-letter-spacing:2px;
-color:#2e8b57;
-border-top: 2px solid #2e8b57;
-border-left: 2px solid #2e8b57;
-border-right: 2px solid #2e8b57;
-border-bottom: none;
-padding: 0px 0px 8px 0px;
-border-radius:9px 9px 0 0;
-text-align: center;
-}
-
-.green{border:2px solid #2e8b57;background:rgba(46,139,87,0.15)}
-.yellow{border:2px solid #c99a2e;background:rgba(201,154,46,0.15)}
-.gray{border:2px solid #8a8f94;background:rgba(138,143,148,0.15)}
-.red{border:2px solid #d83b3b;background:rgba(216,59,59,0.15)}
-
-.team{display:flex;align-items:center}
-.team img{width:34px;height:34px;object-fit:contain}
-
-/* marcador centrado real */
+/* marcador */
 .score{
 position:absolute;
 left:50%;
@@ -146,18 +132,108 @@ font-weight:700;
 letter-spacing:2px;
 }
 
-/* RIGHT SIDE */
-.right-section{display:flex;gap:30px;align-items:flex-start}
+/* teams */
+.team{
+display:flex;
+align-items:center;
+}
 
-/* contenedor horizontal para playoffs */
-.playoffs-columns{display:flex;gap:20px;align-items:flex-start}
+.team img{
+width:34px;
+height:34px;
+object-fit:contain;
+}
 
-/* CLASIFICADOS */
-.qualified{width:220px}
+/* ================= GLOW REAL (EXTERIOR NEÓN) ================= */
+
+.green{
+border:2px solid #2e8b57;
+background:rgba(46,139,87,0.15);
+box-shadow:
+0 0 6px rgba(46,139,87,0.7),
+0 0 14px rgba(46,139,87,0.5),
+0 0 30px rgba(46,139,87,0.25);
+}
+
+.green:hover{
+box-shadow:
+0 0 10px rgba(46,139,87,0.95),
+0 0 22px rgba(46,139,87,0.65),
+0 0 55px rgba(46,139,87,0.35);
+transform:scale(1.02);
+}
+
+.yellow{
+border:2px solid #c99a2e;
+background:rgba(201,154,46,0.15);
+box-shadow:
+0 0 6px rgba(201,154,46,0.7),
+0 0 14px rgba(201,154,46,0.5),
+0 0 30px rgba(201,154,46,0.25);
+}
+
+.yellow:hover{
+box-shadow:
+0 0 10px rgba(201,154,46,0.95),
+0 0 22px rgba(201,154,46,0.65),
+0 0 55px rgba(201,154,46,0.35);
+transform:scale(1.02);
+}
+
+.gray{
+border:2px solid #8a8f94;
+background:rgba(138,143,148,0.15);
+box-shadow:
+0 0 6px rgba(138,143,148,0.55),
+0 0 14px rgba(138,143,148,0.35),
+0 0 28px rgba(138,143,148,0.2);
+}
+
+.gray:hover{
+box-shadow:
+0 0 10px rgba(138,143,148,0.85),
+0 0 22px rgba(138,143,148,0.55),
+0 0 50px rgba(138,143,148,0.3);
+transform:scale(1.02);
+}
+
+.red{
+border:2px solid #d83b3b;
+background:rgba(216,59,59,0.15);
+box-shadow:
+0 0 6px rgba(216,59,59,0.7),
+0 0 14px rgba(216,59,59,0.5),
+0 0 30px rgba(216,59,59,0.25);
+}
+
+.red:hover{
+box-shadow:
+0 0 10px rgba(216,59,59,0.95),
+0 0 22px rgba(216,59,59,0.65),
+0 0 55px rgba(216,59,59,0.35);
+transform:scale(1.02);
+}
+
+/* ================= RIGHT SECTION ================= */
+.right-section{
+display:flex;
+gap:30px;
+align-items:flex-start;
+}
+
+.playoffs-columns{
+display:flex;
+gap:20px;
+}
+
+/* ================= QUALIFIED ================= */
+.qualified{
+width:220px;
+}
+
 .qualified h3{
 letter-spacing:2px;
 font-size:13px;
-margin-bottom:-2px;
 color:#2e8b57;
 border:2px solid #2e8b57;
 padding:6px;
@@ -165,6 +241,7 @@ text-align:center;
 background:rgba(46,139,87,0.10);
 border-radius:9px 9px 0 0;
 }
+
 .seed{
 display:flex;
 align-items:center;
@@ -172,18 +249,25 @@ gap:12px;
 padding:10px;
 background:#0f3328;
 border:2px solid #2e8b57;
-margin-bottom:-2px
+margin-bottom:-2px;
 }
-.seed img{width:28px;height:28px}
 
-/* PLAYOFFS COLUMNAS */
-.colbr{width:190px}
+.seed img{
+width:28px;
+height:28px;
+}
+
+/* ================= PLAYOFFS ================= */
+.colbr{
+width:190px;
+}
+
 .col-titlebr{
 font-size:13px;
 margin:10px 0;
 letter-spacing:2px;
 color:#2e8b57;
-text-align:center
+text-align:center;
 }
 </style>
 </head>
