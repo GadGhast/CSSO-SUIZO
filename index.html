@@ -477,6 +477,59 @@ function bakeAbsoluteImageSrcs(root) {
     return images;
 }
 
+function roundRectPath(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+}
+
+function drawNeonGlowOverlay(canvas, bracket, scale) {
+    // Dibuja el glow directamente con la API nativa de Canvas (shadowBlur/shadowColor)
+    // en vez de depender de que html2canvas interprete bien el box-shadow CSS.
+    // Esto garantiza que el resplandor SIEMPRE aparezca en el PNG exportado.
+    const ctx = canvas.getContext("2d");
+    const bracketRect = bracket.getBoundingClientRect();
+
+    const groups = [
+        { selector: ".match.green", color: "46,139,87", blur: 16 },
+        { selector: ".match.yellow", color: "201,154,46", blur: 16 },
+        { selector: ".match.gray", color: "138,143,148", blur: 14 },
+        { selector: ".match.red", color: "216,59,59", blur: 16 },
+        { selector: ".seed", color: "46,139,87", blur: 16 },
+        { selector: ".qualified h3", color: "46,139,87", blur: 14 }
+    ];
+
+    groups.forEach(({ selector, color, blur }) => {
+        bracket.querySelectorAll(selector).forEach(el => {
+            const r = el.getBoundingClientRect();
+            const x = (r.left - bracketRect.left) * scale;
+            const y = (r.top - bracketRect.top) * scale;
+            const w = r.width * scale;
+            const h = r.height * scale;
+            const radius = 9 * scale;
+
+            ctx.save();
+            ctx.lineWidth = 2 * scale;
+            ctx.strokeStyle = `rgba(${color},0.9)`;
+
+            // varias pasadas con distinto blur para imitar las capas
+            // del box-shadow original (halo cercano + halo difuso)
+            [blur, blur * 1.8, blur * 3] .forEach(b => {
+                ctx.shadowColor = `rgba(${color},0.85)`;
+                ctx.shadowBlur = b * scale;
+                roundRectPath(ctx, x, y, w, h, radius);
+                ctx.stroke();
+            });
+
+            ctx.restore();
+        });
+    });
+}
+
 document.getElementById("downloadBracket").addEventListener("click", async () => {
 
     const button = document.getElementById("downloadBracket");
@@ -487,6 +540,7 @@ document.getElementById("downloadBracket").addEventListener("click", async () =>
     try {
 
         const bracket = document.querySelector(".wrapper");
+        const exportScale = 4;
 
         bakeAbsoluteImageSrcs(bracket);
 
@@ -494,12 +548,12 @@ document.getElementById("downloadBracket").addEventListener("click", async () =>
         await waitForFonts();
 
         // pequeño respiro para que el navegador termine de pintar
-        // estilos (glow, fuentes) antes de capturar
+        // estilos antes de capturar
         await new Promise(resolve => setTimeout(resolve, 150));
 
         const canvas = await html2canvas(bracket, {
             backgroundColor: "#000000",
-            scale: 4,
+            scale: exportScale,
             useCORS: true,
             allowTaint: true,
             foreignObjectRendering: false,
@@ -508,6 +562,8 @@ document.getElementById("downloadBracket").addEventListener("click", async () =>
             windowWidth: bracket.scrollWidth,
             windowHeight: bracket.scrollHeight
         });
+
+        drawNeonGlowOverlay(canvas, bracket, exportScale);
 
         const link = document.createElement("a");
         link.download = "bracket.png";
