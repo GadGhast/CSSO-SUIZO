@@ -407,8 +407,8 @@ text-align:center;
   <!-- CUARTOS -->
   <div class="col">
     <div class="col-playoffs">CUARTOS</div>
-    <div class="match green"><div class="team"><img src="logos/t1.png"></div><div class="score"> - </div><div class="team"><img src="logos/nip.png"></div></div>
-	<div class="match green"><div class="team"><img src="logos/heretics.png"></div><div class="score"> - </div><div class="team"><img src="logos/navi.png"></div></div>
+    <div class="match green"><div class="team"><img src="logos/t1.png"></div><div class="score">1 - 2</div><div class="team"><img src="logos/nip.png"></div></div>
+	<div class="match green"><div class="team"><img src="logos/heretics.png"></div><div class="score">2 - 1</div><div class="team"><img src="logos/navi.png"></div></div>
 	<div class="match green"><div class="team"><img src="logos/vitality.png"></div><div class="score"> - </div><div class="team"><img src="logos/g2.png"></div></div>
 	<div class="match green"><div class="team"><img src="logos/faze.png"></div><div class="score"> - </div><div class="team"><img src="logos/falcons.png"></div></div>
   </div>
@@ -416,7 +416,7 @@ text-align:center;
   <!-- SEMIFINALES -->
   <div class="col">
     <div class="col-playoffs">SEMIFINALES</div>
-    <div class="match green"><div class="team"><img src="logos/TBD.png"></div><div class="score"> - </div><div class="team"><img src="logos/TBD.png"></div></div>
+    <div class="match green"><div class="team"><img src="logos/nip.png"></div><div class="score"> - </div><div class="team"><img src="logos/TBD.png"></div></div>
 	<div class="match green"><div class="team"><img src="logos/TBD.png"></div><div class="score"> - </div><div class="team"><img src="logos/TBD.png"></div></div>
   </div>
 
@@ -459,24 +459,6 @@ async function waitForImages() {
     }));
 }
 
-async function waitForFonts() {
-    if (document.fonts && document.fonts.ready) {
-        await document.fonts.ready;
-    }
-}
-
-function bakeAbsoluteImageSrcs(root) {
-    // foreignObjectRendering resuelve mal las rutas relativas (logos/equipo.png),
-    // así que las "horneamos" como rutas absolutas justo antes de capturar.
-    const images = [...root.querySelectorAll("img")];
-    images.forEach(img => {
-        const absoluteUrl = img.src; // la propiedad .src ya devuelve la URL absoluta resuelta
-        img.setAttribute("src", absoluteUrl);
-        img.crossOrigin = "anonymous";
-    });
-    return images;
-}
-
 document.getElementById("downloadBracket").addEventListener("click", async () => {
 
     const button = document.getElementById("downloadBracket");
@@ -486,23 +468,15 @@ document.getElementById("downloadBracket").addEventListener("click", async () =>
 
     try {
 
+        await waitForImages();
+
         const bracket = document.querySelector(".wrapper");
 
-        bakeAbsoluteImageSrcs(bracket);
-
-        await waitForImages();
-        await waitForFonts();
-
-        // pequeño respiro para que el navegador termine de pintar
-        // estilos (glow, fuentes) antes de capturar
-        await new Promise(resolve => setTimeout(resolve, 150));
-
         const canvas = await html2canvas(bracket, {
-            backgroundColor: "#000000",
+            backgroundColor: "#071c22",
             scale: 4,
             useCORS: true,
             allowTaint: true,
-            foreignObjectRendering: false,
             width: bracket.scrollWidth,
             height: bracket.scrollHeight,
             windowWidth: bracket.scrollWidth,
